@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="bg" style="background-image: url('{% static 'images/result.jpeg' %}'); background-size: cover; background-position: center center; height: auto; min-height: 100vh; padding-top: 50px;">
+    <a href="{% url 'ml_app:home' %}" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; font-size: 24px;">
+        Home
+    </a>
+    {% if no_faces %}
+        <h3 style="font-weight: bold; color: white; font-size: 43px; text-align: center;">DeepFake Video Detection Result</h3>
+        <div class="alert alert-danger">
+            No faces detected. Cannot process the video.
+        </div>
+    {% else %}
+        <h3 style="font-weight: bold; color: white; font-size: 43px; text-align: center;">DeepFake Video Detection Result</h3>
+
+        <div id="preprocessed_images" class="col-12 mt-4 mb-2 d-flex justify-content-center" style="padding: 0; border: none; background: transparent;">
+            <img src="{% static preprocessed_images.0 %}" class="preprocess" style="width: 500px; height: 350px; border: none; outline: none; display: block; background: transparent;" />
+        </div>
+
+        <div class="result text-center">
+          {% if output == "REAL" %}
+            <h4 class="mx-auto" style="font-size: 28px; color:white;">Result: <span style="color:#A8D5BA; font-weight: bold;">{{ output }}</span></h4>
+            <h4 class="mx-auto" style="font-size: 24px; color:white; margin-top: 20px;">Confidence: <span style="color:#A8D5BA; font-weight: bold;">{{ confidence|floatformat:2 }}%</span></h4>
+            <img src="{% static 'images/thumpup.png' %}" alt="real" height="100px" width="auto">
+          {% else %}
+            <h4 class="mx-auto" style="font-size: 28px; color:white;">Result: <span style="color:red; font-weight: bold;">{{ output }}</span></h4>
+            <h4 class="mx-auto" style="font-size: 24px; color:white; margin-top: 20px;">Confidence: <span style="color:red; font-weight: bold;">{{ confidence|floatformat:2 }}%</span></h4>
+            <img src="{% static 'images/thumpdown.png' %}" alt="fake" height="100px" width="auto">
+      {% endif %}
+      
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block js_cripts %}
+<script>
+  $(document).ready(function () {
+    // Removed face detection and box drawing logic
+  });
+</script>
+{% endblock %}

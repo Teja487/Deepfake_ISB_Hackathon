@@ -1,0 +1,12 @@
+The capability gap between open-source and
+closed-source large language models (LLMs)
+remains challenging in text-to-SQL tasks. In
+this paper, we introduce a synthetic data ap-
+proach that amalgamates strong data generated
+by larger, more potent models (strong models)
+with weak data produced by smaller, less well-
+aligned models (weak models). Our approach
+contributes to the improvement of domain gen-
+eralization in text-to-SQL models and inves-
+tigates the potential of weak data supervision
+through preference learning

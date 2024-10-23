@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Text File</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if form.non_field_errors %}
+        <p class="error-message">{{ form.non_field_errors }}</p>
+    {% endif %}
+
+    {% if error %}
+        <p class="error-message">{{ error }}</p>
+    {% endif %}
+
+    {% if real_score %}
+        <h2>Prediction Results:</h2>
+        <p>Real Score: {{ real_score }}%</p>
+        <p>Fake Score: {{ fake_score }}%</p>
+        <p>Prediction: {{ prediction }}</p>
+    {% endif %}
+</body>
+</html>

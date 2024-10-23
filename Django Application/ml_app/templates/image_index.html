@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg" style="background-image: url('{% static 'images/upload_bg.png' %}'); background-size: cover; background-position: top center; height: calc(100vh - 56px); padding-top: 56px;">
+    <div class="container" style="padding-left: 0; padding-right: 0; margin-left: -150px; margin-top: 30px;"> <!-- Move container further left -->
+        <div class="row">
+            <div class="col-12 my-auto text-center">
+                <div class="width-400 mx-auto"> <!-- Center the width-400 div -->
+                    <!-- Image Preview -->
+                    <img id="image_preview" src="" alt="Uploaded Image" style="max-width: 100%; display: none;" />
+                    
+                    <!-- Image Upload Form -->
+                    <form class="form mt-4" method="POST" enctype="multipart/form-data" name="image-upload" id="image-upload">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mt-4">
+                            <label class="text-white font-weight-bold">{{ form.upload_image_file.label }}</label>
+                            
+                            <!-- Custom label for the file input -->
+                            <div class="input-group"> <!-- Added input-group for better styling -->
+                                {{ form.upload_image_file }} <!-- This will render the input field -->
+                                <label for="{{ form.upload_image_file.id_for_label }}" class="custom-file-label">Choose an image file</label>
+                            </div>
+                            
+                            <span id="filename" class="text-white font-weight-bold mt-2"></span> <!-- Default message -->
+                            
+                            {% if form.upload_image_file.errors %}
+                                {% for each_error in form.upload_image_file.errors %}
+                                    <div class="alert alert-danger mt-1 {{ form.upload_image_file.id_for_label }}">
+                                        {{ each_error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Move the Upload button below the Browse button -->
+                        <button id="imageUpload" type="submit" name="submit" class="btn btn-success mt-3 btn-block">Upload</button>
+                    </form>
+                </div>
+
+                <!-- Display the uploaded image after form submission -->
+                {% if request.session.file_name %}
+                <div class="mt-4">
+                    <h5 class="text-white">Uploaded Image:</h5>
+                    <img src="{{ IMAGE_MEDIA_URL }}{{ request.session.file_name }}" alt="Uploaded Image" class="img-fluid mt-2" style="max-width: 100%;">
+                    <span id="filename" class="text-white font-weight-bold mt-2">{{ request.session.file_name }}</span> <!-- Display the filename from the session -->
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_cripts %}
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    $(function () {
+        // Display filename and preview image after file selection
+        $('#{{ form.upload_image_file.id_for_label }}').on('change', function() {
+            var fileName = $(this).val().split('\\').pop(); // Get the filename from the full path
+            if (fileName) {
+                $('#filename').text(fileName); // Set the text of the filename span
+
+                // Preview image
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image_preview').attr('src', e.target.result).show(); // Display the image
+                }
+                reader.readAsDataURL(this.files[0]); // Read the selected image file
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+<style>
+    /* Style for the Browse label */
+    .custom-file-label {
+        background-color: white; /* White background */
+        color: black; /* Black text */
+        padding: 10px 15px; /* Add some padding */
+        border-radius: 5px; /* Rounded corners */
+        border: 1px solid #ccc; /* Light border */
+        cursor: pointer; /* Change cursor to pointer */
+        margin-top: 0.5rem; /* Space above the label */
+        width: auto; /* Allow the label to resize */
+    }
+
+    .custom-file-label:hover {
+        background-color: #f0f0f0; /* Slightly darker on hover */
+    }
+
+    /* Ensures the input is styled properly */
+    .input-group {
+        display: flex;
+        align-items: center; /* Center the elements vertically */
+        margin-bottom: 1rem; /* Space between inputs */
+    }
+
+    input[type="file"] {
+        display: none; /* Hide the original file input */
+    }
+
+    .custom-file-label {
+        flex: 1; /* Allow the label to take up space */
+    }
+</style>

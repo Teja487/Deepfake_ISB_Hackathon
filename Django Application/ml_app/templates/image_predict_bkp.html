@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="bg" style="background-image: url('{% static 'images/result.jpg' %}'); background-size: cover; background-position: center center; height: auto; min-height: 100vh; padding-top: 50px;">
+  <div class="container" style="max-width: 800px; margin: 0 auto; background-color: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 10px;">
+    <h3 style="font-weight: bold; color: white; font-size: 43px; text-align: center;">DeepFake Image Detection Result</h3>
+
+   
+<div class="result text-center">
+  <h3 style="color: white; font-weight: bold;">Uploaded Image</h3>
+    
+  {% if uploaded_image %}
+  <img src="{{ uploaded_image }}" alt="Uploaded Image" style="max-width: 100%; border-radius: 10px;" />
+  {% else %}
+  <p style="color: white;">No image uploaded yet.</p>
+  {% endif %}
+      
+
+      <!-- Display the uploaded image using MEDIA_URL and the uploaded_image variable -->
+    
+      {% comment %} <img src="/media/image_uploaded/your_image_file.jpg" alt="Uploaded Image" /> {% endcomment %}
+
+      <!-- Display the result based on the predicted_class -->
+      {% if predicted_class == "REAL" %}
+      <h4 class="mx-auto" style="color: white; font-weight: bold;">Result: <span style="color:green">{{ predicted_class }} </span>
+        <img src="{% static 'images/thumpup.png' %}" alt="real" height="100px" width="auto">
+      </h4>
+      {% else %}
+      <h4 class="mx-auto" style="color: white; font-weight: bold;">Result: <span style="color:red">{{ predicted_class }} </span>
+        <img src="{% static 'images/thumpdown.png' %}" alt="fake" height="100px" width="auto">
+      </h4>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

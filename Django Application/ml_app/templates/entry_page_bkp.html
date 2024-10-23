@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="bg" style="background-image: url('{% static 'images/Login_final.jpg' %}'); background-size: cover; background-position: top center; height: calc(100vh - 56px); padding-top: 56px; position: relative;">
+    <div class="container d-flex align-items-center justify-content-start" style="margin-left: 0; height: 100%; flex-direction: column; position: relative; padding-top: 30vh; padding-left: 6%;"> <!-- Adjusted padding -->
+        <div class="row text-start" style="z-index: 2; width: 100%;">
+            <div class="col-12" style="max-width: 400px;"> <!-- Set a maximum width -->
+                <form id="uploadForm" method="POST" class="text-start"> <!-- Changed class to text-start -->
+                    {% csrf_token %}
+                    <!-- Dropdown for selection with default option -->
+                    <select id="actionSelect" class="form-select" style="width: 100%; font-size: 1.25rem; padding: 1rem; margin: 0.5rem 0; border-radius: 5px; border: 1px solid #ccc;">
+                        <option value="" disabled selected>Select from below category</option> <!-- Default option -->
+                        <option value="video">Upload Video</option>
+                        {% comment %} <option value="image">Upload Image</option> {% endcomment %}
+                        <option value="text">Upload Text</option> <!-- New option -->
+                    </select>
+                    <!-- Hidden input to store the action -->
+                    <input type="hidden" id="actionInput" name="action" value="">
+                    <!-- Single submit button -->
+                    <button type="submit" class="btn" style="width: 100%; background-color: white; color: black; font-weight: bold; font-size: 1.25rem; padding: 1rem; margin: 0.5rem 0; border-radius: 5px; border: 1px solid #ccc;">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_cripts %}
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        // Get the selected value from the dropdown
+        var selectedAction = document.getElementById('actionSelect').value;
+        // Update the hidden input value based on the dropdown selection
+        document.getElementById('actionInput').value = selectedAction;
+    });
+</script>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg" style="background-image: url('{% static 'images/upload.jpg' %}'); background-size: cover; background-position: top center; height: calc(100vh - 56px); padding-top: 56px;">
+    <div class="container" style="padding-left: 0; padding-right: 0; margin-left: -150px; margin-top: 30px;">
+        <h1 class="text-white font-weight-bold text-center mt-4" style="padding-left: 0; padding-right: 0; margin-left: -150px;">Upload Text</h1> <!-- Added heading here -->
+        <div class="row">
+            <div class="col-12 my-auto text-center">
+                <div class="width-400 mx-auto"> <!-- Center the width-400 div -->
+                    <!-- Text Upload Form -->
+                    <form class="form mt-4" method="POST" enctype="multipart/form-data" name="text-upload" id="text-upload" class="text-center mt-3">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mt-4">
+                            <label class="text-white font-weight-bold">{{ form.upload_text_file.label_tag }}</label>
+                            <div class="input-group"> <!-- Added input-group for better styling -->
+                                {{ form.upload_text_file }}
+                                <label for="{{ form.upload_text_file.id_for_label }}" class="custom-file-label">Choose a text file</label>
+                            </div>
+                            <span id="text_filename" class="text-white font-weight-bold mt-2"></span> <!-- Default message -->
+                            
+                            {% if form.upload_text_file.errors %}
+                                {% for each_error in form.upload_text_file.errors %}
+                                    <div class="alert alert-danger mt-1 {{ form.upload_text_file.id_for_label }}">
+                                        {{ each_error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <button id="textUpload" type="submit" name="submit" class="btn btn-success mt-3 btn-block">Upload</button>
+                    </form>
+                </div>
+
+                <!-- Display prediction results after form submission -->
+                {% if real_score %}
+                <div class="mt-4">
+                    <h5 class="text-white">Prediction Results:</h5>
+                    <p class="text-white">Real Score: {{ real_score }}%</p>
+                    <p class="text-white">Fake Score: {{ fake_score }}%</p>
+                    <p class="text-white">Prediction: {{ prediction }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_cripts %}
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    $(function () {
+        // Display filename after file selection
+        $('#{{ form.upload_text_file.id_for_label }}').on('change', function() {
+            var fileName = $(this).val().split('\\').pop(); // Get the filename from the full path
+            if (fileName) {
+                $('#text_filename').text(fileName); // Set the text of the filename span
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+<style>
+    /* Style for the Browse label */
+    .custom-file-label {
+        background-color: white; /* White background */
+        color: black; /* Black text */
+        padding: 10px 15px; /* Add some padding */
+        border-radius: 5px; /* Rounded corners */
+        border: 1px solid #ccc; /* Light border */
+        cursor: pointer; /* Change cursor to pointer */
+        margin-top: 0.5rem; /* Space above the label */
+        width: auto; /* Allow the label to resize */
+    }
+
+    .custom-file-label:hover {
+        background-color: #f0f0f0; /* Slightly darker on hover */
+    }
+
+    /* Ensures the input is styled properly */
+    .input-group {
+        display: flex;
+        align-items: center; /* Center the elements vertically */
+        margin-bottom: 1rem; /* Space between inputs */
+    }
+
+    input[type="file"] {
+        display: none; /* Hide the original file input */
+    }
+
+    .custom-file-label {
+        flex: 1; /* Allow the label to take up space */
+    }
+</style>
